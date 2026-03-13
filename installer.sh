@@ -175,6 +175,7 @@ echo "2) Let's Encrypt (for direct server SSL)"
 echo "3) Skip SSL setup"
 echo ""
 read -p "Enter your choice (1-3): " -n 1 -r
+echo
 echo ""
 
 if [[ $REPLY == "1" ]]; then
@@ -205,7 +206,6 @@ elif [[ $REPLY == "2" ]]; then
 else
     echo -e "${YELLOW}SSL setup skipped${NC}"
     echo "Run later with: certbot --nginx -d $DOMAIN -d www.$DOMAIN"
-
 fi
 
 echo ""
@@ -217,7 +217,7 @@ echo -e "Your Redirect Engine is now running at:"
 echo -e "${GREEN}https://$DOMAIN${NC}"
 echo ""
 echo -e "${YELLOW}Next Steps:${NC}"
-echo "1. Update your Supabase environment variables"
+echo "1. Update your Bolt Database environment variables"
 echo "2. Configure your database connection"
 echo "3. Create your admin account"
 echo ""
