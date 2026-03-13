@@ -175,7 +175,6 @@ echo "2) Let's Encrypt (for direct server SSL)"
 echo "3) Skip SSL setup"
 echo ""
 read -p "Enter your choice (1-3): " -n 1 -r
-echo
 echo ""
 
 if [[ $REPLY == "1" ]]; then
