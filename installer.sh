@@ -206,6 +206,7 @@ elif [[ $REPLY == "2" ]]; then
 else
     echo -e "${YELLOW}SSL setup skipped${NC}"
     echo "Run later with: certbot --nginx -d $DOMAIN -d www.$DOMAIN"
+
 fi
 
 echo ""
