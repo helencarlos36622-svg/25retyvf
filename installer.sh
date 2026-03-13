@@ -167,45 +167,18 @@ else
 fi
 
 # Setup SSL certificate
-echo -e "${GREEN}[8/8]${NC} SSL Configuration..."
-echo ""
-echo -e "${YELLOW}Choose your SSL setup:${NC}"
-echo "1) Using Cloudflare (recommended if using Cloudflare proxy)"
-echo "2) Let's Encrypt (for direct server SSL)"
-echo "3) Skip SSL setup"
-echo ""
-read -p "Enter your choice (1-3): " -n 1 -r
-echo
+echo -e "${GREEN}[8/8]${NC} Setting up SSL with Let's Encrypt..."
+echo -e "${YELLOW}Note: Make sure your domain $DOMAIN points to this server${NC}"
 echo ""
 
-if [[ $REPLY == "1" ]]; then
-    echo -e "${GREEN}Cloudflare SSL Mode Selected${NC}"
-    echo ""
-    echo -e "${YELLOW}Make sure you have:${NC}"
-    echo "1. Set Cloudflare SSL/TLS mode to 'Full' or 'Full (strict)'"
-    echo "2. Created Origin Certificate in Cloudflare (optional for Full strict)"
-    echo "3. DNS records (@ and *) pointing to this server"
-    echo ""
-    echo -e "${GREEN}Your site will use Cloudflare's SSL certificate${NC}"
-    echo "No additional SSL setup needed on this server"
-
-elif [[ $REPLY == "2" ]]; then
-    echo -e "${YELLOW}Setting up Let's Encrypt...${NC}"
-    echo -e "${YELLOW}Make sure your domain $DOMAIN points directly to this server${NC}"
-    echo ""
-    read -p "Continue? (y/n) " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        certbot --nginx -d $DOMAIN -d www.$DOMAIN --non-interactive --agree-tos --register-unsafely-without-email --redirect
-        systemctl enable certbot.timer
-        systemctl start certbot.timer
-        echo -e "${GREEN}Let's Encrypt SSL certificate installed!${NC}"
-    else
-        echo -e "${YELLOW}Skipped. Run later: certbot --nginx -d $DOMAIN${NC}"
-    fi
+if certbot --nginx -d $DOMAIN -d www.$DOMAIN --non-interactive --agree-tos --register-unsafely-without-email --redirect 2>/dev/null; then
+    systemctl enable certbot.timer
+    systemctl start certbot.timer
+    echo -e "${GREEN}SSL certificate installed successfully!${NC}"
 else
-    echo -e "${YELLOW}SSL setup skipped${NC}"
-    echo "Run later with: certbot --nginx -d $DOMAIN -d www.$DOMAIN"
+    echo -e "${YELLOW}SSL setup failed or skipped${NC}"
+    echo "You can run it manually later with:"
+    echo "certbot --nginx -d $DOMAIN -d www.$DOMAIN"
 fi
 
 echo ""
@@ -217,7 +190,7 @@ echo -e "Your Redirect Engine is now running at:"
 echo -e "${GREEN}https://$DOMAIN${NC}"
 echo ""
 echo -e "${YELLOW}Next Steps:${NC}"
-echo "1. Update your Bolt Database environment variables"
+echo "1. Update your Supabase environment variables"
 echo "2. Configure your database connection"
 echo "3. Create your admin account"
 echo ""
